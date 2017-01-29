@@ -1,0 +1,45 @@
+package binghai.Core;
+
+import java.util.List;
+
+/**
+ * Created by Administrator on 2016/12/10.
+ */
+public class DataTable {
+    private List<String> pks;
+    private List<DataItem> items;
+    private List<DataRecord> records;
+
+    public DataTable(List<String> pks, List<DataItem> items, List<DataRecord> records) {
+        this.pks = pks;
+        this.items = items;
+        this.records = records;
+    }
+
+    public DataTable() {
+    }
+
+    public List<String> getPks() {
+        return pks;
+    }
+
+    public void setPks(List<String> pks) {
+        this.pks = pks;
+    }
+
+    public List<DataItem> getItems() {
+        return items;
+    }
+
+    public void setItems(List<DataItem> items) {
+        this.items = items;
+    }
+
+    public List<DataRecord> getRecords() {
+        return records;
+    }
+
+    public void setRecords(List<DataRecord> records) {
+        this.records = records;
+    }
+}

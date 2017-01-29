@@ -1,0 +1,59 @@
+package binghai.Std;
+
+/**
+ * Created by sdust on 2016/12/9.
+ */
+public class Format {
+    public static String formatOriSQL(String ori){
+        String s = cutBlank(standardSQL(ori)).toLowerCase();
+        if(s.endsWith(";"))
+            return s.substring(0,s.length()-1);
+        return s;
+    }
+
+    /** 输出String数组*/
+    private static void outArray(String[] parts){
+        for(String p:parts)
+            System.out.println(p);
+    }
+    /** 去除sql语句中的多余空格*/
+    private static String cutBlank(String ori){
+        StringBuilder sb = new StringBuilder();
+        boolean blank_flag = true;
+        for (int i = 0; i < ori.length(); i++) {
+            if(ori.charAt(i)==' ' && !blank_flag){
+                blank_flag = true;
+                sb.append(' ');
+            }
+            if(ori.charAt(i) != ' '){
+                blank_flag = false;
+                sb.append(ori.charAt(i));
+            }
+        }
+        return sb.toString();
+    }
+    /** 标准化断句*/
+    private static String standardSQL(String ori){
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0;i < ori.length();i++){
+            if(i+1 < ori.length() && ori.charAt(i+1) == '=' && isCmpFlag(ori.charAt(i))){
+                sb.append(' ');
+                sb.append(ori.charAt(i));
+            }else if(i+1 < ori.length() && isCmpFlag(ori.charAt(i+1)) && Character.isLetter(ori.charAt(i))){
+                sb.append(ori.charAt(i));
+                sb.append(' ');
+            }else if (i+1<ori.length() && !isCmpFlag(ori.charAt(i+1)) && isCmpFlag(ori.charAt(i))){
+                sb.append(ori.charAt(i));
+                sb.append(' ');
+            }
+            else sb.append(ori.charAt(i));
+        }
+
+        return sb.toString();
+    }
+
+    /** 判断是否是比较符号*/
+    private static boolean isCmpFlag(char c) {
+        return c == '=' || c == '>' || c == '<' || c == '!';
+    }
+}

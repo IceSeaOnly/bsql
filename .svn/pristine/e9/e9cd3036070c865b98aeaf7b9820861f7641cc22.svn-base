@@ -1,0 +1,82 @@
+package binghai;
+
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Map;
+
+/**
+ * Created by sdust on 2016/12/9.
+ */
+public class Create {
+    /** 格式化并转换成模型*/
+    private static ArrayList<TableElementModel> formatCreateSQL(String ori) throws Exception {
+        String std = Format.formatOriSQL(ori);
+        int findex = std.indexOf('(');
+        int lindex = std.lastIndexOf(')');
+        String tableSource = std.substring(findex+1,lindex).trim();
+        String[] src = tableSource.split(",");
+        ArrayList<TableElementModel> models = new ArrayList<TableElementModel>();
+        for (int i = 0; i < src.length; i++) {
+            models.add(translateSQL2Model(src[i]));
+        }
+        return models;
+    }
+
+    /** 把创建表的定义语句转换成模型*/
+    private static TableElementModel translateSQL2Model(String s) throws Exception {
+        int findex = s.indexOf('`');
+        if(findex == s.length()) throw new Exception("sql语句不合法");
+        int lindex = s.lastIndexOf('`');
+        String mname = s.substring(findex+1,lindex);
+        int rfindex = s.indexOf('(');
+        if(rfindex == s.length()) throw new Exception("sql语句不合法");
+        String type = s.substring(lindex+2,rfindex);
+        int rlindex = s.indexOf(')');
+        if(rlindex == s.length()) throw new Exception("sql语句不合法");
+        int len = Integer.parseInt(s.substring(rfindex+1,rlindex).trim());
+        Boolean PK = s.contains("primary key");
+        Boolean autoIncrement = s.contains("auto") && s.contains("increment");
+        Boolean not_null = s.contains("not null");
+        Boolean default_null = s.contains("default null");
+        Boolean hasIndex = false;
+        if(not_null && default_null) throw new Exception("不可同时含有not null和default null");
+        return new TableElementModel(mname,type,len,PK,autoIncrement,not_null,default_null,hasIndex);
+    }
+
+    /**
+     * 传入创建表的命令
+     * 返回是否创建成功
+     * json方式存储
+     * type:{每一列的名称及类型}
+     * data:{每一个的每一个参数名称及数据}
+     * */
+    public static Result createTable(String ori){
+
+        String tableName = getTableName(ori);
+        if(IO.isDataTableExsit(tableName))
+            return new Result(false,null,"该数据表已经存在!创建失败!");
+
+        JSONObject table = new JSONObject();
+        JSONArray table_types = new JSONArray();
+        try {
+            table_types.addAll(formatCreateSQL(ori));
+        } catch (Exception e) {
+            return new Result(false,null,e.toString());
+        }
+        /** 插入空数据*/
+        JSONArray table_data = new JSONArray();
+        /** 存文件*/
+        table.put("type",table_types);
+        table.put("data",table_data);
+        IO.WriteCH(tableName,table.toJSONString());
+        return new Result(true,null,null);
+    }
+
+    private static String getTableName(String ori) {
+        int sindex = ori.indexOf('`');
+        int eindex = ori.indexOf('`',sindex+1);
+        return ori.substring(sindex+1,eindex);
+    }
+}

@@ -1,0 +1,10 @@
+package binghai;
+
+/**
+ * Created by sdust on 2016/12/9.
+ */
+public class RunTimeError extends Exception {
+    public RunTimeError(String message) {
+        super(message);
+    }
+}

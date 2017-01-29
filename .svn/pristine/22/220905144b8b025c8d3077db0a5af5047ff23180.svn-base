@@ -1,0 +1,83 @@
+package binghai.Core;
+
+import binghai.Std.IO;
+import binghai.Std.Result;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * Created by Administrator on 2016/12/10.
+ * 系统核心
+ */
+public class SystemCore {
+    private static User curUser;
+    private static Map<String,User> users;
+    private static List<String> dbs;
+
+    public static Result login(String uname,String upass){
+        curUser = users.get(uname);
+        if(curUser == null) return new Result(false,null,"用户不存在");
+        if(!curUser.getPassword().equals(upass)){
+            curUser = null;
+            return new Result(false,null,"密码不正确");
+        }
+        return new Result(false,null,uname+"登录成功");
+    }
+
+    public static User getCurUser() {
+        return curUser;
+    }
+
+    public static void setCurUser(User curUser) {
+        SystemCore.curUser = curUser;
+    }
+
+    public static Map<String, User> getUsers() {
+        return users;
+    }
+
+    public static void setUsers(Map<String, User> users) {
+        SystemCore.users = users;
+    }
+
+    public static List<String> getDbs() {
+        return dbs;
+    }
+
+    public static void setDbs(List<String> dbs) {
+        SystemCore.dbs = dbs;
+    }
+
+    public static Result SystemStart(){
+        String USER = IO.ReadCH("BSQL_SYS_CORE_USER");
+        String DATABASE = IO.ReadCH("BSQL_SYS_CORE_DATABASE");
+        if(USER == null || DATABASE == null){
+            System.out.println("系统第一次启动，正在初始化...");
+
+            users = new HashMap<String, User>();
+            users.put("root",new User("root","root",new UserPrivileges(),new HashMap<String, DBPrivilege>()));
+            System.out.println("默认管理员root，密码root");
+            JSONObject initu = new JSONObject();
+            initu.put("users",users);
+            IO.WriteCH("BSQL_SYS_CORE_USER",initu.toJSONString());
+
+            dbs = new ArrayList<String>();
+            JSONObject arr = new JSONObject();
+            arr.put("dbs",dbs);
+            IO.WriteCH("BSQL_SYS_CORE_DATABASE",arr.toJSONString());
+
+            USER = initu.toJSONString();
+            DATABASE = arr.toJSONString();
+        }
+        JSONObject ju = JSONObject.parseObject(USER);
+        JSONObject jd = JSONObject.parseObject(DATABASE);
+        users = (Map<String, User>) ju.get("users");
+        dbs = (List<String>) jd.get("dbs");
+        return new Result(true,"系统启动完毕","数据准备完毕,"+users.size()+"个用户,"+dbs.size()+"个数据库.");
+    }
+}

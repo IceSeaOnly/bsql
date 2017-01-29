@@ -1,0 +1,31 @@
+package binghai;
+
+import org.junit.Test;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
+
+/**
+ * Created by sdust on 2016/12/9.
+ */
+public class Main {
+
+
+    public static void main(String[] args) {
+        IO.initSystem();
+//        Scanner reader = new Scanner(System.in);
+//        String line = null;
+//        while ((line = reader.nextLine()) != null){
+//            System.out.println(Format.formatOriSQL(line));
+//        }
+//        System.out.println("BSQL system has ended.");
+        Map table = new HashMap();
+        table.put("__TABLE_NAME__","binghaitest");
+        table.put("id","int");
+        table.put("name","string");
+        table.put("address","string");
+        Result r = Create.createTable(table);
+        System.out.println(r);
+    }
+}

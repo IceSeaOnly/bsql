@@ -1,0 +1,1 @@
+{"users":[{"dbs":{"hello":{"all":true,"alter":true,"createTable":true,"delete":true,"drop":true,"index":true,"insert":true,"select":true,"tbs":[],"update":true}},"name":"root","password":"root","up":{"createDB":true,"createUser":true,"grant":true,"shutdown":true}}]}

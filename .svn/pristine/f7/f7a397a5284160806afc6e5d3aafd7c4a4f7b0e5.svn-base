@@ -1,0 +1,22 @@
+package binghai.Core;
+
+import java.util.List;
+
+/**
+ * Created by Administrator on 2016/12/10.
+ */
+public class DataBase {
+    private List<DataTable> tbs;
+
+    public DataBase(List<DataTable> tbs) {
+        this.tbs = tbs;
+    }
+
+    public List<DataTable> getTbs() {
+        return tbs;
+    }
+
+    public void setTbs(List<DataTable> tbs) {
+        this.tbs = tbs;
+    }
+}

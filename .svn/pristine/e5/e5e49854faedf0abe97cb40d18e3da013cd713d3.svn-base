@@ -1,0 +1,47 @@
+package binghai;
+
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+
+import java.util.Map;
+
+/**
+ * Created by sdust on 2016/12/9.
+ */
+public class Create {
+    /**
+     * 传入创建表的命令
+     * 格式 Map数组，Type:Name传入
+     * 第一个为 ‘__TABLE_NAME__’：‘table name’
+     * 剩下的为 name；classType
+     * 返回是否创建成功
+     * json方式存储
+     * type:{每一列的名称及类型}
+     * data:{每一个的每一个参数名称及数据}
+     * */
+    public static Result createTable(Map<String,String> rule){
+        String[] keys = rule.keySet().toArray(new String[]{});
+        String tableName = rule.get("__TABLE_NAME__");
+
+        if(IO.isDataTableExsit(tableName))
+            return new Result(false,null,"该数据表已经存在!创建失败!");
+
+        JSONObject table = new JSONObject();
+        JSONArray table_types = new JSONArray();
+        /** 每一列的名称及类型*/
+        for (int i = 0; i < keys.length; i++) {
+            JSONObject d = new JSONObject();
+            if(!keys[i].equals("__TABLE_NAME__")){
+                d.put(keys[i],rule.get(keys[i]));
+                table_types.add(d);
+            }
+        }
+        /** 插入空数据*/
+        JSONArray table_data = new JSONArray();
+        /** 存文件*/
+        table.put("type",table_types);
+        table.put("data",table_data);
+        IO.WriteCH(tableName,table.toJSONString());
+        return new Result(true,null,null);
+    }
+}

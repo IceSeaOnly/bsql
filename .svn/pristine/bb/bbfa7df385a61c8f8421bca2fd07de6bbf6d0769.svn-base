@@ -1,0 +1,35 @@
+package binghai.Core;
+
+import java.util.List;
+
+/**
+ * Created by Administrator on 2016/12/10.
+ */
+public class DataBase {
+    private List<DataTable> tbs;
+    private String dbName;
+
+    public DataBase(String dbName,List<DataTable> tbs) {
+        this.tbs = tbs;
+        this.dbName = dbName;
+    }
+
+    public DataBase() {
+    }
+
+    public List<DataTable> getTbs() {
+        return tbs;
+    }
+
+    public void setTbs(List<DataTable> tbs) {
+        this.tbs = tbs;
+    }
+
+    public String getDbName() {
+        return dbName;
+    }
+
+    public void setDbName(String dbName) {
+        this.dbName = dbName;
+    }
+}

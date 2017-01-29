@@ -1,0 +1,97 @@
+package binghai;
+
+import binghai.Core.SystemCore;
+import binghai.Opt.Create;
+import binghai.Std.Format;
+import binghai.Std.IO;
+import binghai.Std.Result;
+
+import java.util.Scanner;
+
+import static binghai.Main.CMD.*;
+
+/**
+ * Created by sdust on 2016/12/9.
+ */
+public class Main {
+
+
+    public static void main(String[] args) {
+        InitSystem();
+        Scanner reader = new Scanner(System.in);
+        String line = null;
+        while ((line = reader.nextLine()) != null) {
+            if (!CommandDispatcher(Format.formatOriSQL(line)))
+                break;
+        }
+        SystemCore.flushCore();
+        System.out.println("BSQL 已经停机.");
+        //Create.createTable("CREATE TABLE `User` (`id` int(11) NOT NULL AUTO_INCREMENT,  `email` varchar(255) DEFAULT NULL,  `name` varchar(255) DEFAULT NULL,  `phone` varchar(255) DEFAULT NULL,  `sex` int(11) NOT NULL,  PRIMARY KEY (`id`))");
+    }
+
+
+
+    /**
+     * 命令识别&分发中心,返回值为fasle时系统关闭
+     */
+    private static boolean CommandDispatcher(String std) {
+        if (SystemCore.getCurUser() == null && !std.contains("bsql -u")) {
+            System.out.println("请先登录B-SQL!");
+            return true;
+        }
+
+        switch (CommandRecognize(std)) {
+            case NODEFINE:
+                System.out.println("无法识别的命令");
+                break;
+            case LOGIN:
+                System.out.println(SystemCore.doLogin(std));
+                break;
+            case LOGOUT:
+                System.out.println(SystemCore.doLogout());
+                break;
+            case SHUTDOWN:
+                if(SystemCore.getCurUser().getUp().isShutdown())
+                    return false;
+                else System.out.println("当前用户无权停止bsql系统");
+                break;
+            case CREATE_DB:
+                if(SystemCore.getCurUser().getUp().isCreateDB())
+                    System.out.println(Create.CreateDB(std));
+                else System.out.println(new Result(false,null,"当前用户无权创建数据库"));
+                break;
+            default:
+                System.out.println("无法识别的命令");
+        }
+        return true;
+    }
+
+    /**
+     * 定义命令种类
+     */
+    public enum CMD {
+        NODEFINE, LOGIN, LOGOUT,SHUTDOWN,CREATE_USER,CREATE_DB,CREATE_TABLE
+    }
+
+    private static CMD CommandRecognize(String std) {
+        if (std.startsWith("bsql -u"))
+            return LOGIN;
+        if (std.startsWith("exit") || std.startsWith("logout"))
+            return LOGOUT;
+        if(std.startsWith("shutdown"))
+            return SHUTDOWN;
+        if(std.startsWith("create database"))
+            return CREATE_DB;
+        if(std.startsWith("create user"))
+            return CREATE_USER;
+        if(std.startsWith("create table"))
+            return CREATE_TABLE;
+        return NODEFINE;
+    }
+
+
+    private static void InitSystem() {
+        IO.initSystem();
+        System.out.println(SystemCore.SystemStart());
+    }
+}

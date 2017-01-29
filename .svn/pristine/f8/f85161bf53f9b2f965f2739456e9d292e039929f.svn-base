@@ -1,0 +1,20 @@
+package binghai;
+
+import binghai.Std.IO;
+
+/**
+ * Created by sdust on 2016/12/9.
+ */
+public class Main {
+
+
+    public static void main(String[] args) {
+        IO.initSystem();
+//        Scanner reader = new Scanner(System.in);
+//        String line = null;
+//        while ((line = reader.nextLine()) != null){
+//            System.out.println(Format.formatOriSQL(line));
+//        }
+//        System.out.println("BSQL system has ended.");
+    }
+}

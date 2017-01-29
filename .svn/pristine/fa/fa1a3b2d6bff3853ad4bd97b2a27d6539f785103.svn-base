@@ -1,0 +1,13 @@
+import org.junit.Test;
+
+/**
+ * Created by sdust on 2016/12/9.
+ */
+public class test {
+
+
+    @Test
+    public void test(){
+
+    }
+}

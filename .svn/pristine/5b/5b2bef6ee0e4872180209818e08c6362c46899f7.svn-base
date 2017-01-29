@@ -1,0 +1,28 @@
+package binghai;
+
+import binghai.Core.SystemCore;
+import binghai.Opt.Create;
+import binghai.Std.IO;
+
+/**
+ * Created by sdust on 2016/12/9.
+ */
+public class Main {
+
+
+    public static void main(String[] args) {
+        InitSystem();
+//        Scanner reader = new Scanner(System.in);
+//        String line = null;
+//        while ((line = reader.nextLine()) != null){
+//            System.out.println(Format.formatOriSQL(line));
+//        }
+//        System.out.println("BSQL system has ended.");
+        Create.createTable("CREATE TABLE `User` (`id` int(11) NOT NULL AUTO_INCREMENT,  `email` varchar(255) DEFAULT NULL,  `name` varchar(255) DEFAULT NULL,  `phone` varchar(255) DEFAULT NULL,  `sex` int(11) NOT NULL,  PRIMARY KEY (`id`))");
+    }
+
+    private static void InitSystem() {
+        IO.initSystem();
+        System.out.println(SystemCore.SystemStart());
+    }
+}

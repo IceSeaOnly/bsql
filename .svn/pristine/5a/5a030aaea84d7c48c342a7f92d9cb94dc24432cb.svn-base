@@ -1,0 +1,142 @@
+package binghai.Core;
+
+import binghai.Std.Result;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Created by Administrator on 2016/12/10.
+ * 数据库权限
+ */
+public class DBPrivilege {
+    /** 删除记录*/
+    private boolean delete;
+    /** 删除数据库及表*/
+    private boolean drop;
+    /** 修改表和索引*/
+    private boolean createTable;
+    private boolean alert;
+    private boolean index;
+    private boolean insert;
+    private boolean select;
+    private boolean update;
+    private boolean all;
+    /** 拥有的表*/
+    private List<String> tbs;
+
+    public DBPrivilege(boolean delete, boolean drop, boolean createTable, boolean alert, boolean index, boolean insert, boolean select, boolean update, boolean all, List<String> tbs) {
+        this.delete = delete;
+        this.drop = drop;
+        this.createTable = createTable;
+        this.alert = alert;
+        this.index = index;
+        this.insert = insert;
+        this.select = select;
+        this.update = update;
+        this.all = all;
+        this.tbs = tbs;
+    }
+
+    public DBPrivilege() {
+        this.createTable = true;
+        this.alert = true;
+        this.delete = true;
+        this.drop = true;
+        this.index = true;
+        this.insert = true;
+        this.select = true;
+        this.update = true;
+        this.all = true;
+        this.tbs = new ArrayList<String>();
+    }
+
+    public Result addTable(String t){
+        if(tbs.contains(t))
+            return new Result(false,null,"该用户已拥有该表");
+        tbs.add(t);
+        return new Result(true,null,"添加权限成功");
+    }
+    public boolean ownTable(String n){
+        return tbs.contains(n);
+    }
+    public List<String> getTbs() {
+        return tbs;
+    }
+
+    public void setTbs(List<String> tbs) {
+        this.tbs = tbs;
+    }
+
+    public boolean isDelete() {
+        return delete;
+    }
+
+    public void setDelete(boolean delete) {
+        this.delete = delete;
+    }
+
+    public boolean isDrop() {
+        return drop;
+    }
+
+    public void setDrop(boolean drop) {
+        this.drop = drop;
+    }
+
+    public boolean isIndex() {
+        return index;
+    }
+
+    public void setIndex(boolean index) {
+        this.index = index;
+    }
+
+    public boolean isInsert() {
+        return insert;
+    }
+
+    public void setInsert(boolean insert) {
+        this.insert = insert;
+    }
+
+    public boolean isSelect() {
+        return select;
+    }
+
+    public void setSelect(boolean select) {
+        this.select = select;
+    }
+
+    public boolean isUpdate() {
+        return update;
+    }
+
+    public void setUpdate(boolean update) {
+        this.update = update;
+    }
+
+    public boolean isAll() {
+        return all;
+    }
+
+    public void setAll(boolean all) {
+        this.all = all;
+    }
+
+    public boolean isAlert() {
+        return alert;
+    }
+
+    public void setAlert(boolean alert) {
+        this.alert = alert;
+    }
+
+    public boolean isCreateTable() {
+        return createTable;
+    }
+
+    public void setCreateTable(boolean createTable) {
+        this.createTable = createTable;
+    }
+}

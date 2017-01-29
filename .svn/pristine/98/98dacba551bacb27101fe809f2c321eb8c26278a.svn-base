@@ -1,0 +1,73 @@
+package binghai.Core;
+
+import binghai.Std.Result;
+
+import java.util.Map;
+
+/**
+ * Created by Administrator on 2016/12/10.
+ */
+public class User {
+    private String name;
+    private String password;
+    private UserPrivileges up;
+    private Map<String,DBPrivilege> dbs;
+
+    public User(String name, String password, UserPrivileges up, Map<String, DBPrivilege> dbs) {
+        this.name = name;
+        this.password = password;
+        this.up = up;
+        this.dbs = dbs;
+    }
+
+    public User() {
+    }
+
+
+    public Result grant(String dbName, DBPrivilege dbp){
+        if(dbs.get(dbName) == null){
+            dbs.put(dbName,dbp);
+            return new Result(true,null,"数据库赋权成功");
+        }
+        return new Result(false,null,"数据库赋权失败,该用户已拥有该数据库");
+    }
+
+    public Result revoke(String dbName){
+        if(dbs.get(dbName) != null){
+            dbs.remove(dbName);
+            return new Result(true,null,"数据库撤权成功");
+        }
+        return new Result(false,null,"数据库赋权失败,该用户尚未拥有该数据库");
+    }
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public Map<String, DBPrivilege> getDbs() {
+        return dbs;
+    }
+
+    public void setDbs(Map<String, DBPrivilege> dbs) {
+        this.dbs = dbs;
+    }
+
+    public UserPrivileges getUp() {
+        return up;
+    }
+
+    public void setUp(UserPrivileges up) {
+        this.up = up;
+    }
+}

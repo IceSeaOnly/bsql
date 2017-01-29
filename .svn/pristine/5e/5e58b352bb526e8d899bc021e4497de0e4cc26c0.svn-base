@@ -1,0 +1,17 @@
+import binghai.SupportType;
+import org.junit.Test;
+
+/**
+ * Created by sdust on 2016/12/9.
+ */
+public class test {
+
+
+    @Test
+    public void test(){
+        String[] t = SupportType.getAllSupportType();
+        for(int i = 0;i < t.length;i++){
+            System.out.println(t[i]);
+        }
+    }
+}
